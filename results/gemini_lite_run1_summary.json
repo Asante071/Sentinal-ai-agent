@@ -1,0 +1,21 @@
+{
+  "agent": "gemini_lite_run1",
+  "scenarios": 15,
+  "pass_rate": 86.7,
+  "tool_selection_accuracy": 93.3,
+  "task_success_rate": 100.0,
+  "correct_escalation_rate": 100.0,
+  "false_escalation_count": 0,
+  "avg_tool_calls": 2.0,
+  "wiring_errors": 0,
+  "avg_latency_s": 28.63,
+  "by_type": {
+    "Standard": "7/7",
+    "Error handling": "0/1",
+    "Variation": "1/1",
+    "Reasoning": "2/2",
+    "Clarification": "1/2",
+    "Out of scope": "1/1",
+    "Multi-step": "1/1"
+  }
+}

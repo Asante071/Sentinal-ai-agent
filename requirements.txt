@@ -1,0 +1,15 @@
+# SentinelAI: everything the project needs. Versions are the ones tested (Python 3.12.10, Windows 11).
+# Agent, tools and knowledge base
+google-genai==2.29.0
+python-dotenv==1.2.4
+chromadb==1.5.9
+sentence-transformers==6.1.0
+numpy==2.5.3
+# Mmabotse's backend API, dataset analysis, evaluation and report builder
+fastapi==0.142.4
+uvicorn==0.54.0
+httpx==0.28.1
+pytest==9.1.1
+pandas==3.0.6
+matplotlib==3.11.2
+python-docx==1.2.0

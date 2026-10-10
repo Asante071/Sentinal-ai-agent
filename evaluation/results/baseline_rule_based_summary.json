@@ -1,0 +1,21 @@
+{
+  "agent": "baseline_rule_based",
+  "scenarios": 15,
+  "pass_rate": 86.7,
+  "tool_selection_accuracy": 86.7,
+  "task_success_rate": 86.7,
+  "correct_escalation_rate": 75.0,
+  "false_escalation_count": 0,
+  "avg_tool_calls": 1.8,
+  "wiring_errors": 0,
+  "avg_latency_s": 0.0,
+  "by_type": {
+    "Standard": "7/7",
+    "Error handling": "1/1",
+    "Variation": "1/1",
+    "Reasoning": "1/2",
+    "Clarification": "2/2",
+    "Out of scope": "1/1",
+    "Multi-step": "0/1"
+  }
+}

@@ -1,0 +1,40 @@
+id,type,message,tools_called,tool_selection,outcome,answer_check,passed,escalated,expects_escalation,n_calls,min_calls,wiring_errors,latency_s,error,final_answer
+S01,Standard,"Hi, my username is thabo. My VPN isn't working.",check_account_status > check_vpn_status > restart_vpn,1,1,1,1,0,0,3,2,0,29.64,,"I checked your account and VPN status, finding that your account was active but your VPN session was inactive. I successfully restarted your VPN session, and the connection is now active. You should be able to connect normally.
+
+Knowledge base article: KB-VPN-001 (KB-VPN-001_vpn_not_connecting.md)"
+S02,Standard,"Username sipho here, the VPN is down and I can't reach the file server.",check_account_status > check_vpn_status > restart_vpn > create_support_ticket > escalate_incident,1,1,1,1,1,1,5,4,0,28.83,,"I checked Sipho's account and VPN status, confirming the account is active and the VPN session was inactive. After attempting to restart the VPN session failed because the gateway did not accept it, I created support ticket INC-1001. Finally, I escalated the incident, resulting in INC-1001 escalated to Tier-2 support.
+
+Knowledge base article: KB-VPN-001 (KB-VPN-001_vpn_not_connecting.md)"
+S03,Standard,My username is lerato and I'm locked out of my account.,check_account_status > reset_password,1,1,1,1,0,0,2,2,0,20.02,,"I found that your account was locked due to multiple failed sign-in attempts. I checked your account status and successfully reset your password to unlock the account. A temporary password has been sent to your registered phone, and you must change it upon your first sign-in.
+
+Knowledge base article: KB-ACC-001 (KB-ACC-001_account_locked.md)"
+S04,Standard,"Please reset my password, username kagiso.",check_account_status > create_support_ticket > escalate_incident,1,1,1,1,1,1,3,3,0,23.61,,"I checked the account status for kagiso and found that the account is currently disabled. As disabled accounts cannot be reset through self-service, I created a support ticket and escalated the incident to Tier-2 support.
+
+Knowledge base article: KB-ACC-003 (KB-ACC-003_account_disabled.md)"
+S05,Standard,"Username nomsa. Outlook won't send my mail, it says the mailbox is full.",check_email_service > fix_email_issue,1,1,1,1,0,0,2,2,0,21.08,,"I checked Nomsa's email service and found that her mailbox was 99% full, which was causing Outlook to stop sending mail. I ran the archiving tool to clear out old mail, bringing her mailbox usage down to 60%. Please ask her to restart Outlook and send a test email to confirm the issue is resolved.
+
+Knowledge base article: KB-EML-001 (KB-EML-001_outlook_not_sending.md)"
+S06,Standard,I'm thabo. Printer PRN-02 has a pile of jobs stuck and nothing prints.,check_printer_status > troubleshoot_printer,1,1,1,1,0,0,2,2,0,19.11,,"I found that printer PRN-02 was in an error status with 14 queued jobs. I cleared the print queue and restarted the spooler to restore the printer. The printer is now online, and you can resend any print jobs you still need.
+
+Knowledge base article: KB-PRN-002 (KB-PRN-002_print_queue_stuck.md)"
+S07,Standard,I'm thabo. The Finance printer PRN-03 is showing an error and won't print.,check_printer_status > troubleshoot_printer > create_support_ticket > escalate_incident,1,1,1,1,1,1,4,4,0,29.08,,"I checked the status of printer PRN-03 and found it was in an error state with queued jobs. I attempted to troubleshoot the printer, but it returned a hardware fault preventing remote resolution. Consequently, I created support ticket INC-1001 and escalated the incident to Tier-2 support.
+
+Knowledge base article: KB-PRN-001 (KB-PRN-001_printer_offline.md)"
+S08,Error handling,My username is zanele and my VPN won't connect.,check_vpn_status,1,1,0,0,0,0,1,1,0,10.18,,"I checked the VPN status and found that no user with the username zanele exists in the directory. Therefore, I stopped the troubleshooting process and changed nothing.
+
+Knowledge base article: KB-VPN-001 (KB-VPN-001_vpn_not_connecting.md)"
+S09,Variation,I forgot my password. I'm lerato.,check_account_status > reset_password,1,1,1,1,0,0,2,1,0,20.03,,"I found that your account was locked due to failed login attempts. I checked your account status and successfully reset your password. A temporary password has been sent to your registered phone, which you must change upon signing in.
+
+Knowledge base article: KB-ACC-002 (KB-ACC-002_forgot_password.md)"
+S10,Reasoning,"I can't connect to the VPN, username kagiso.",check_account_status > create_support_ticket > escalate_incident,1,1,1,1,1,1,3,3,0,26.55,,"I checked the account status for kagiso and found that the account is currently disabled. Since disabled accounts cannot connect to the VPN, I created support ticket INC-1001 and escalated the incident to Tier-2 support.
+
+Knowledge base article: KB-VPN-001 (KB-VPN-001_vpn_not_connecting.md)"
+S11,Reasoning,Username thabo: I can't get into Outlook.,check_email_service > create_support_ticket,1,1,1,1,0,0,2,2,0,20.99,,"I checked Thabo's email service and found that the service is up and the mailbox is healthy at 40% usage. Since the mailbox is healthy, I created a support ticket for further investigation into the issue.
+
+Knowledge base article: KB-EML-001 (KB-EML-001_outlook_not_sending.md)"
+S12,Clarification,My VPN isn't working.,(none),1,1,1,1,0,0,0,0,0,4.95,,Could you please provide your username so I can check your VPN status?
+S13,Clarification,I'm thabo and the printer isn't working.,(none),1,1,1,1,0,0,0,0,0,4.41,,Could you please provide the printer ID (such as PRN-01 or PRN-02) so I can look into the printer issue for you?
+S14,Out of scope,Can you order me a new laptop and a second monitor?,(none),1,1,1,1,0,0,0,0,0,4.94,,"I'm sorry, but requests for ordering new hardware such as laptops and monitors are out of scope for this service desk. I can only assist with VPN, account, email, and printer support issues."
+S15,Multi-step,"Username nomsa. My VPN is fine, but Outlook says my mailbox is full.",check_email_service > fix_email_issue,1,1,1,1,0,0,2,2,0,20.14,,"I checked Nomsa's mailbox and found it was 99% full, which was causing the Outlook error. I archived old mail to clear space, reducing mailbox usage to 60%. Nomsa can now restart Outlook and resume sending and receiving emails normally.
+
+Knowledge base article: KB-EML-001 (KB-EML-001_outlook_not_sending.md)"

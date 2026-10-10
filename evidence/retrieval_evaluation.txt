@@ -1,0 +1,47 @@
+SentinelAI - knowledge-base retrieval evaluation (evidence for report, Parts D and E)
+Date:    2026-10-08
+Tool:    eval_retrieval.py (real embedding model, no Gemini involved)
+Model:   all-MiniLM-L6-v2 (sentence-transformers), vectors stored in ChromaDB
+Corpus:  12 knowledge-base articles (Mmabotse): 3 per category (VPN, Account, Email, Printer)
+Chunking: one chunk per article (articles are about 100 words); Article ID, category, title and file kept as metadata
+Search:  top 3 articles returned, closest first (distance = squared Euclidean, lower is closer)
+
+QUESTION
+Does the search find the right article for a plain-language problem description?
+Two ways of indexing an article were compared:
+  full     the whole article text is embedded (current default)
+  summary  only title + keywords + symptoms are embedded (the full article is still what is returned)
+
+RESULT (15 hand-written questions, one expected article each)
+  mode      right article first    right article in top 3
+  full      14 / 15                15 / 15
+  summary   14 / 15                15 / 15
+
+  Only miss, in both modes:
+  "VPN restart failed and the gateway did not accept the session"  expected KB-VPN-001
+     returned order: KB-VPN-003, KB-VPN-001, KB-VPN-002
+     (the wording "did not accept the session" is close in meaning to "VPN rejects username or password")
+
+DECISION
+  The summary mode gave no improvement, so the simpler default (full article) is kept.
+  Returning 3 results, not 1, matters: the right article was always among them, including for the one miss.
+
+LIMITATIONS
+  - Small test set (15 questions) written by one author after reading the articles, so the score is probably
+    optimistic. It is an indicative check, not a benchmark. Questions written by someone else, ideally taken from
+    real tickets, would be a better test.
+  - It measures retrieval only. It does not measure whether the agent then follows the retrieved article.
+  - A question outside the knowledge base (a request for a new laptop) was closest to its best article at distance
+    1.84, while in-scope questions were between 0.38 and 0.89 in the first check. This suggests a distance cut-off
+    could work (setting KB_MAX_DISTANCE). It was chosen from only 8 questions. It is off by default in the code, but a value of 1.5
+    is set in the .env on the author's machine (the date it was added is not recorded). The 15-question test above does not use
+    the cut-off, so its numbers are not affected; the agent's own searches may be.
+
+RAW OUTPUT
+12 articles, 15 questions, model all-MiniLM-L6-v2
+
+mode = full     right article first: 14/15   right article in top 3: 15/15
+     missed: 'VPN restart failed and the gateway did not accept the session'  expected KB-VPN-001, got ['KB-VPN-003', 'KB-VPN-001', 'KB-VPN-002']
+
+mode = summary  right article first: 14/15   right article in top 3: 15/15
+     missed: 'VPN restart failed and the gateway did not accept the session'  expected KB-VPN-001, got ['KB-VPN-003', 'KB-VPN-001', 'KB-VPN-002']

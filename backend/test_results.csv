@@ -1,0 +1,9 @@
+id,category,message,expected_outcome,tool_sequence,result
+S1,VPN,Thabo: my VPN isn't working.,resolved,check_vpn_status:OK -> restart_vpn:OK,PASS
+S2,VPN,"Sipho: VPN down, restart doesn't help.",escalated,check_vpn_status:OK -> restart_vpn:RESTART_FAILED -> create_support_ticket:OK -> escalate_incident:OK,PASS
+S3,Account,Lerato: I'm locked out.,resolved,check_account_status:OK -> reset_password:OK,PASS
+S4,Account,Kagiso: reset my password.,escalated,check_account_status:OK -> reset_password:ACCOUNT_DISABLED -> create_support_ticket:OK -> escalate_incident:OK,PASS
+S5,Email,Nomsa: Outlook won't send mail.,resolved,check_email_service:OK -> fix_email_issue:OK,PASS
+S6,Printer,Printer PRN-02 has 14 stuck jobs.,resolved,check_printer_status:OK -> troubleshoot_printer:OK,PASS
+S7,Printer,Finance printer PRN-03 not printing.,escalated,check_printer_status:OK -> troubleshoot_printer:HARDWARE_FAULT -> create_support_ticket:OK -> escalate_incident:OK,PASS
+S8,Error handling,Unknown user 'zanele' asks for VPN help.,graceful failure,check_vpn_status:USER_NOT_FOUND,PASS

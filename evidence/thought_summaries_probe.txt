@@ -1,0 +1,64 @@
+SentinelAI - measuring when Gemini returns its reasoning (evidence for report, Part D design decision)
+Date:    2026-10-09
+Tools:   probe_thoughts.py (structure of Gemini's replies) and probe_thoughts2.py (frequency by thinking level)
+Model:   gemini-3.5-flash-lite
+Purpose: the brief names the thought-action-observation cycle. The agent already showed actions and observations;
+         this checks how to show the "thought" from Gemini's own reasoning, not from invented text.
+
+FINDING 1 (probe_thoughts.py): what Gemini returns by default
+  Each reply contains a step of type "thought" followed by one or more "function_call" steps. By default the thought
+  step carries only an encrypted signature and no readable text. Asking only for summaries
+  (thinking_summaries = "auto") also returned no text in the sample taken. With a thinking level set as well
+  (thinking_level = "low", thinking_summaries = "auto") a readable summary came back in that sample, and Gemini
+  asked for two tools at once (parallel calls), which the agent's loop already handles.
+
+FINDING 2 (probe_thoughts2.py): how often a readable summary comes back
+  Three typical messages (a VPN fault, a VPN restart that fails, a printer hardware fault) at three thinking levels.
+  level    message   seconds   summary characters
+  low      1          10.8       0       (no summary)
+  low      2           8.3     520
+  low      3           6.9       0       (no summary)
+  medium   1          12.7     598
+  medium   2          11.8     717
+  medium   3           7.0     799
+  high     1           5.5    1092
+  high     2          12.0     749
+  high     3           8.9     753
+  Summaries returned:  low 1 of 3,   medium 3 of 3,   high 3 of 3.
+  The agent's own reader extracted the text correctly from the real replies.
+
+DECISION
+  Thought summaries are requested with thinking_level = "medium" (reliable in the sample, and not the most expensive
+  level). They are shown as [THOUGHT] lines before each action, and recorded in the run's event log.
+  If Gemini returns no summary for a step, none is shown; no text is invented.
+
+EFFECT ON THE MEASURED RESULTS
+  The three final evaluation runs were made with thoughts OFF (default for the evaluation).
+  One extra run with thoughts ON at thinking_level = "low" (lite_thoughts_run1) scored 14/15, 0 false escalations,
+  S08 failing as before, 16.5 s per scenario: no regression. A run at the final setting ("medium") is still to be made.
+
+LIMITATIONS
+  - Three calls per level on one model on one day: it shows a pattern, not a guarantee.
+  - Time per call varied from 5.5 s to 12.7 s with no clear link to the thinking level; with this few calls, the
+    differences are within normal variation.
+  - The summaries are written by the model after thinking. They describe its reasoning but are not a literal transcript.
+  - Summaries are long (about 500 to 1100 characters) and informal ("Okay, so..."); the console shows the first 500.
+
+RAW OUTPUT (probe_thoughts2.py)
+Model: gemini-3.5-flash-lite
+
+level    msg   seconds  thought steps  summary chars  first words
+low      1        10.8              1              0  (none)
+low      2         8.3              1            520  Troubleshooting Sipho's VPN Connection Okay, so Sipho's repo
+low      3         6.9              1              0  (none)
+medium   1        12.7              1            598  My Initial Response to the User's Issue Okay, so "thabo" her
+medium   2        11.8              1            717  Okay, here's my breakdown of this situation, thinking throug
+medium   3         7.0              1            799  Okay, here's my thought process on this printer issue, Thabo
+high     1         5.5              1           1092  Troubleshooting Thabo's VPN Issue Okay, so `thabo` is report
+high     2        12.0              1            749  Troubleshooting "sipho's" VPN Issue Okay, here's the situati
+high     3         8.9              1            753  Troubleshooting the Finance Printer Okay, here's the situati
+
+Summary: how often a readable summary came back
+  low      1 of 3
+  medium   3 of 3
+  high     3 of 3

@@ -1,0 +1,21 @@
+Printer Troubleshooting Guide
+
+Issue:
+Users cannot print, the printer is offline, or documents remain in the print queue.
+
+Troubleshooting Procedure:
+
+1. Confirm that the printer is powered on and has no hardware error indicator.
+2. Confirm the printer is online and reachable on the network.
+3. Check the print queue for stalled or failed jobs.
+4. Clear only the affected stalled jobs and retry a test page.
+5. Confirm the print spooler service is running; restart it if policy allows.
+6. Reconnect the approved printer queue if the issue continues.
+
+Escalation Criteria:
+
+Escalate to the Print Services Team when a printer remains unreachable, repeated
+queue failures affect multiple users, or a hardware fault is indicated.
+
+Recommended Escalation Team:
+Print Services Team.

@@ -1,0 +1,115 @@
+SentinelAI - final evaluation of the integrated agent (evidence for report, Part E)
+Date:      2026-10-09 (built from the CSV and JSON files in results/)
+Harness:   Mmabotse's evaluation/run_evaluation.py with her 15 scenarios (S01 to S15), unchanged
+Agent:     gateway_agent.run (Gemini ReAct loop -> tool gateway -> Mmabotse's tools; knowledge base: her 12 articles)
+Model:     gemini-3.5-flash-lite for every run listed as valid below
+Baseline:  Mmabotse's rule-based agent (no LLM), saved results
+Settings:  long-term memory off; thoughts off for lite_final runs (see section 1 for the others); KB_MAX_DISTANCE=1.5 (search results
+           farther than 1.5 are dropped) is present in the .env of the machine that ran the evaluation, but when it was added is
+           not recorded, so it may not have applied to every run. It can only matter when a search result is far from every article.
+
+1. WHICH RUNS COUNT
+   A run is valid only if no answer in it is a 'service not responding', 'usage limit' or 'empty answer' message and no
+   scenario ended in an error. NOTE: this rule was written after run lite_thoughts_medium_run3 had been seen to contain
+   outage messages; it removes that run only, which is reported separately below.
+
+   run                           configuration                  passed  outage msgs  errors   status
+   gemini_lite_run1              thoughts off, before crash fix  13/15            0       1   history only (a crash in S13, since fixed)
+   lite_final_run1               thoughts off                    14/15            0       0   valid
+   lite_final_run2               thoughts off                    14/15            0       0   valid
+   lite_final_run3               thoughts off                    14/15            0       0   valid
+   lite_thoughts_run1            thoughts on, level low          14/15            0       0   valid
+   lite_thoughts_medium_run1     thoughts on, level medium       14/15            0       0   valid
+   lite_thoughts_medium_run2     thoughts on, level medium       14/15            0       0   valid
+   lite_thoughts_medium_run3     thoughts on, level medium       11/15            5       0   INVALID: Gemini outage
+
+2. HEADLINE RESULT: three clean runs, thoughts off (lite_final_run1 to 3), against the baseline
+                                       Baseline  Agent run 1   run 2   run 3    Mean
+   Scenarios passed                       13/15        14/15   14/15   14/15   14/15
+   Pass rate (%)                           86.7         93.3    93.3    93.3    93.3
+   Tool selection accuracy (%)             86.7         93.3    93.3    93.3    93.3
+   Task success (%)                        86.7        100.0   100.0   100.0   100.0
+   Correct escalation rate (%)             75.0        100.0   100.0   100.0   100.0
+   False escalations (count)                  0            1       0       0 1 in 45
+   Average tool calls                       1.8         2.07    2.13    1.93    2.04
+   Wiring errors                              0            0       0       0       0
+   Average seconds per scenario              ~0        22.41   23.97   21.38   22.59
+
+3. DEMO CONFIGURATION: thoughts on at level medium (two clean runs)
+   passed 14/15 and 14/15; tool selection 100.0%; task success 100.0%; correct escalation 100.0%;
+   false escalations 0 in 30; average tool calls 2.13; average seconds per scenario 18.89.
+   One further clean run at level low (lite_thoughts_run1): 14/15, failing S08.
+   Asking for thoughts did not lower the pass rate. Tool selection rose from 93.3% to 100% because the agent called the
+   required tool in S08, but the same scenario still failed on its reply wording (section 5).
+
+4. PER SCENARIO (P = pass, F = fail)
+        type             final 1 final 2 final 3 thoughts 1 thoughts 2
+   S01  Standard               P       P       P          P          P
+   S02  Standard               P       P       P          P          P
+   S03  Standard               P       P       P          P          P
+   S04  Standard               P       P       P          P          P
+   S05  Standard               P       P       P          P          P
+   S06  Standard               P       P       P          P          P
+   S07  Standard               P       P       P          P          P
+   S08  Error handling         F       F       F          F          F
+   S09  Variation              P       P       P          P          P
+   S10  Reasoning              P       P       P          P          P
+   S11  Reasoning              P       P       P          P          P
+   S12  Clarification          P       P       P          P          P
+   S13  Clarification          P       P       P          P          P
+   S14  Out of scope           P       P       P          P          P
+   S15  Multi-step             P       P       P          P          P
+
+   By type, identical in all five valid runs: Standard 7/7, Error handling 0/1, Variation 1/1, Reasoning 2/2,
+   Clarification 2/2, Out of scope 1/1, Multi-step 1/1. The baseline scores Error handling 1/1, Reasoning 1/2, Multi-step 0/1.
+
+5. THE ONE FAILURE: S08 (a user who does not exist)
+   Scenario: 'My username is zanele and my VPN won't connect.' It requires the tool check_vpn_status and a reply containing
+   the words 'not found'. The backend's own message is "No user 'zanele' exists in the directory".
+   lite_final_run1: tools = check_account_status; required tool called = no; reply has the words 'not found' = no
+   lite_final_run2: tools = check_account_status; required tool called = no; reply has the words 'not found' = no
+   lite_final_run3: tools = check_account_status; required tool called = no; reply has the words 'not found' = no
+   lite_thoughts_medium_run1: tools = check_vpn_status; required tool called = yes; reply has the words 'not found' = no
+   lite_thoughts_medium_run2: tools = check_account_status > check_vpn_status; required tool called = yes; reply has the words 'not found' = no
+   In every run the agent changed nothing and told the user the account does not exist. Under the strict criteria the scenario
+   fails, and it is reported as failed. The scoring was not changed after the results were seen.
+
+6. HOW STABLE IS THE BEHAVIOUR
+   - Outcomes were identical across the three headline runs (same 14 passes), but the order of tool calls varied in S01, S02, S10 and S11.
+   - S11 (healthy mailbox, expected: ticket only): the agent also escalated in lite_final_run1 (the one false escalation) and followed
+     the rule in the other four valid runs.
+
+7. QUALITY OF THE ANSWERS (valid runs, 75 answers)
+   - Made-up team names: 0 of 75 answers named a team that no tool returned (checked with the agent's own check; the only team a tool
+     returns is 'Tier-2 support').
+   - Knowledge-base line: in each of the three thoughts-off runs, 13 answers carried an article line, 11 written by the model and 2 added
+     by the code. In each of the two thoughts-on runs, 12 answers carried one and the model wrote all of them.
+
+8. THE INVALID RUN
+   lite_thoughts_medium_run3: 11/15, 5 answers were 'AI service did not respond' messages after three
+   40-second timeouts, and the average time rose to 66.76 s per scenario. S12, S13 and S15 failed only because no answer arrived. It measures Gemini's
+   availability, not the agent, and is excluded from every table above. Note that an outage can also produce a pass: S14 passed in
+   this run, so a pass rate measured during an outage is not evidence.
+
+9. A BUG THE EVALUATION FOUND
+   In gemini_lite_run1, S13 returned TypeError ('NoneType' object is not iterable) and an empty answer: the agent crashed on an empty
+   reply from Gemini. It now asks again once and, if the reply is still empty, returns a clear message. In a later run the note
+   'Gemini returned an empty answer. Asking again.' appeared once and the agent recovered.
+
+10. WHY GEMINI-3.5-FLASH-LITE, AND MODEL AVAILABILITY
+   The larger Gemini models timed out repeatedly while the system was being built and measured. Four checks on 9 October 2026
+   (one tiny question per model, 20 s limit) found each model answering this many times: gemini-3.8-flash 1 of 4, gemini-3.7-flash 2 of 4,
+   gemini-3.6-flash 0 of 4, gemini-3.5-flash 3 of 4, gemini-3.5-flash-lite 2 of 4, gemini-3.1-flash-lite 4 of 4. gemini-3.5-flash-lite was
+   responding when the evaluation ran, so every valid run uses it. The model is a single setting (GEMINI_MODEL); no code depends on it.
+   Demonstrations may use whichever model answers on the day, and must say which.
+
+11. LIMITATIONS
+   - Three headline runs on one lighter model, 15 scenarios written by one author. 14/15 against 13/15 is one scenario and is not a
+     meaningful difference by itself; the supported claim is 'matches the baseline overall and handles the reasoning and multi-step
+     cases it cannot, with 100% correct escalations'.
+   - The IT environment is simulated (mock users, printers and tickets).
+   - Results apply to this model on this day; other models were not evaluated.
+   - Average time per scenario is about 22 s against almost 0 s for the baseline.
+
+FILES: results/lite_final_run1..3, lite_thoughts_medium_run1..2, lite_thoughts_run1 (valid); lite_thoughts_medium_run3 (invalid, kept);
+       gemini_lite_run1 (before the crash fix, kept as history). Each has a _results.csv and a _summary.json.

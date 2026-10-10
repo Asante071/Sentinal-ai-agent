@@ -1,0 +1,181 @@
+SentinelAI - memory demonstration session (evidence for report, Parts D and E)
+Date:    2026-10-09
+Script:  chat_gateway_agent.py (short-term memory + long-term memory ON)
+Model:   gemini-3.5-flash-lite
+Backend: Mmabotse's mock IT tools; knowledge base: Mmabotse's 12 articles
+
+WHAT THE SESSION SHOWS
+  1. Short-term memory: the agent asked for the missing username and called no tool. The user's next message
+     ("thabo") continued the SAME conversation and the VPN was fixed.
+  2. Long-term memory, recording: /history thabo shows the fix was stored (data/agent_memory.db, SQLite).
+  3. Long-term memory, use: in a NEW conversation (/new) the user reported "Username sipho. My VPN is down again."
+     The agent called lookup_user_history first, found 3 earlier events (failed restart, ticket, escalation),
+     and escalated with a new ticket (INC-1002) instead of repeating the restart that had already failed.
+  4. The agent wrote the "Knowledge base article:" line itself in the first two answers. In earlier runs it
+     almost never did; since then the instructions are re-sent with every Gemini call.
+
+THINGS TO NOTE HONESTLY
+  - The second case cites KB-VPN-002 (VPN slow or dropping). KB-VPN-001 (VPN will not connect) fits better. The
+    agent's own search wording ("VPN is down cannot reach file server") ranked VPN-002 first. Retrieval is sensitive to
+    how the query is phrased (see retrieval_evaluation.txt).
+  - The last answer speaks about "Sipho" in the third person.
+  - The mock backend restarts at INC-1001 for every program run, while the history file keeps growing, so ticket
+    numbers in the history can repeat across runs; the date and time identify an entry.
+  - One session on one model is a demonstration, not a measurement.
+  - The user's typo "sername sipho here..." was left as typed.
+
+RAW OUTPUT
+(.venv) PS C:\Users\ZandreCoetzee\Downloads\sentinel-ai-main\sentinel-ai-main> python chat_gateway_agent.py
+Model: gemini-3.5-flash-lite   Long-term memory: ON
+
+You: My VPN isn't working.
+
+======================================================================
+SENTINELAI - GEMINI AGENT (connected to backend tools)
+======================================================================
+[MODEL] gemini-3.5-flash-lite
+[USER] My VPN isn't working.
+
+[FINAL RESPONSE]
+Could you please provide your username?
+
+You: thabo
+[USER] thabo
+
+[ACTION] knowledge_search {"query": "VPN isn't working"}
+[OBSERVATION] FOUND: Result 1: KB-VPN-001 (KB-VPN-001_vpn_not_connecting.md), distance 0.7592
+
+# VPN will not connect
+
+**Article ID:** KB-VPN-001
+**Category:** VPN
+**Keywords:** vpn, cannot connect, connection failed, remote access
+
+## Symptoms
+The VPN client shows 'Disconnected', keeps retrying, or fails to connect fro
+
+[ACTION] lookup_user_history {"username": "thabo"}
+[OBSERVATION] NO_HISTORY: No earlier events are recorded for thabo.
+
+[ACTION] check_vpn_status {"username": "thabo"}
+[OBSERVATION] INACTIVE: VPN connection is inactive for thabo.
+
+[ACTION] check_account_status {"username": "thabo"}
+[OBSERVATION] ACTIVE: Account for thabo is active.
+
+[ACTION] restart_vpn {"username": "thabo"}
+[OBSERVATION] VPN_RESTARTED: VPN successfully restarted and connection is active.
+
+[FINAL RESPONSE]
+I checked your account status, which is active, and found your VPN connection was inactive. I successfully restarted your VPN session, and it is now active and connected.
+
+Knowledge base article: KB-VPN-001 (KB-VPN-001_vpn_not_connecting.md)
+
+You: /history thabo
+1 event(s) for thabo:
+  2026-10-09T13:24:11  vpn      fixed          VPN successfully restarted and connection is active.
+
+You: sername sipho here, the VPN is down and I can't reach the file server.
+[USER] sername sipho here, the VPN is down and I can't reach the file server.
+
+[ACTION] knowledge_search {"query": "VPN is down cannot reach file server"}
+[OBSERVATION] FOUND: Result 1: KB-VPN-002 (KB-VPN-002_vpn_slow_or_dropping.md), distance 0.8951
+
+# VPN is slow or keeps dropping
+
+**Article ID:** KB-VPN-002
+**Category:** VPN
+**Keywords:** vpn slow, drops, disconnects, timeout
+
+## Symptoms
+VPN connects but drops every few minutes or internal apps are very slow.
+
+## Reso
+
+[ACTION] lookup_user_history {"username": "sipho"}
+[OBSERVATION] NO_HISTORY: No earlier events are recorded for sipho.
+
+[ACTION] check_vpn_status {"username": "sipho"}
+[OBSERVATION] INACTIVE: VPN connection is inactive for sipho.
+
+[ACTION] check_account_status {"username": "sipho"}
+[OBSERVATION] ACTIVE: Account for sipho is active.
+
+[ACTION] restart_vpn {"username": "sipho"}
+[OBSERVATION] RESTART_FAILED: VPN service restart failed (gateway did not accept session).
+
+[ACTION] create_support_ticket {"priority": "medium", "username": "sipho", "summary": "VPN restart failed for sipho when trying to reach file server", "category": "vpn"}
+[OBSERVATION] TICKET_CREATED: Ticket INC-1001 created.
+
+[ACTION] escalate_incident {"ticket_id": "INC-1001", "reason": "VPN restart failed for sipho and gateway did not accept session"}
+[OBSERVATION] ESCALATED: INC-1001 escalated to Tier-2 support.
+
+[FINAL RESPONSE]
+I checked your account status, which is active, but found your VPN connection was inactive and the automatic restart failed because the gateway did not accept the session. I have created support ticket INC-1001 and escalated the incident to Tier-2 support.
+
+Knowledge base article: KB-VPN-002 (KB-VPN-002_vpn_slow_or_dropping.md)
+
+You: /new
+New conversation started.
+
+You: Username sipho. My VPN is down again.
+
+======================================================================
+SENTINELAI - GEMINI AGENT (connected to backend tools)
+======================================================================
+[MODEL] gemini-3.5-flash-lite
+[USER] Username sipho. My VPN is down again.
+
+[ACTION] lookup_user_history {"username": "sipho"}
+[OBSERVATION] HISTORY_FOUND: 3 earlier event(s) for sipho, newest first:
+2026-10-09T13:25:11  vpn  escalated  VPN restart failed for sipho and gateway did not accept session
+2026-10-09T13:25:01  vpn  ticket_created  VPN restart failed for sipho when trying to reach file server
+2026-10-09T13:24:53  vpn  fix_failed  VPN service r
+
+[ACTION] knowledge_search {"query": "VPN down"}
+[OBSERVATION] FOUND: Result 1: KB-VPN-002 (KB-VPN-002_vpn_slow_or_dropping.md), distance 0.6546
+
+# VPN is slow or keeps dropping
+
+**Article ID:** KB-VPN-002
+**Category:** VPN
+**Keywords:** vpn slow, drops, disconnects, timeout
+
+## Symptoms
+VPN connects but drops every few minutes or internal apps are very slow.
+
+## Reso
+
+[ACTION] check_vpn_status {"username": "sipho"}
+[OBSERVATION] INACTIVE: VPN connection is inactive for sipho.
+
+[ACTION] create_support_ticket {"summary": "VPN is down again for sipho, previous restart attempts failed.", "category": "vpn", "priority": "medium", "username": "sipho"}
+[OBSERVATION] TICKET_CREATED: Ticket INC-1002 created.
+
+[ACTION] escalate_incident {"reason": "VPN is down again for sipho and previous attempts to restart have failed.", "ticket_id": "INC-1002"}
+[OBSERVATION] ESCALATED: INC-1002 escalated to Tier-2 support.
+
+[FINAL RESPONSE]
+I checked Sipho's user history and found previous failed VPN restart attempts and escalations for this issue. Because previous fixes did not hold, I created a support ticket and escalated the incident to Tier-2 support.
+Knowledge base article: KB-VPN-002 (KB-VPN-002_vpn_slow_or_dropping.md)
+
+You: /quit
+
+TRACE (all turns)
+  1. knowledge_search       FOUND              success=True
+  2. lookup_user_history    NO_HISTORY         success=True
+  3. check_vpn_status       INACTIVE           success=True
+  4. check_account_status   ACTIVE             success=True
+  5. restart_vpn            VPN_RESTARTED      success=True
+  6. knowledge_search       FOUND              success=True
+  7. lookup_user_history    NO_HISTORY         success=True
+  8. check_vpn_status       INACTIVE           success=True
+  9. check_account_status   ACTIVE             success=True
+  10. restart_vpn            RESTART_FAILED     success=False
+  11. create_support_ticket  TICKET_CREATED     success=True
+  12. escalate_incident      ESCALATED          success=True
+  13. lookup_user_history    HISTORY_FOUND      success=True
+  14. knowledge_search       FOUND              success=True
+  15. check_vpn_status       INACTIVE           success=True
+  16. create_support_ticket  TICKET_CREATED     success=True
+  17. escalate_incident      ESCALATED          success=True

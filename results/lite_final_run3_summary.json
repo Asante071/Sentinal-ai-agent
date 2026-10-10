@@ -1,0 +1,21 @@
+{
+  "agent": "lite_final_run3",
+  "scenarios": 15,
+  "pass_rate": 93.3,
+  "tool_selection_accuracy": 93.3,
+  "task_success_rate": 100.0,
+  "correct_escalation_rate": 100.0,
+  "false_escalation_count": 0,
+  "avg_tool_calls": 1.93,
+  "wiring_errors": 0,
+  "avg_latency_s": 21.38,
+  "by_type": {
+    "Standard": "7/7",
+    "Error handling": "0/1",
+    "Variation": "1/1",
+    "Reasoning": "2/2",
+    "Clarification": "2/2",
+    "Out of scope": "1/1",
+    "Multi-step": "1/1"
+  }
+}

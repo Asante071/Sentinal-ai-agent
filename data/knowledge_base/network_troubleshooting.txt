@@ -1,0 +1,30 @@
+Network Troubleshooting Guide
+
+Issue:
+Users are experiencing general network connectivity problems.
+
+Troubleshooting Procedure:
+
+1. Check whether the network adapter is enabled.
+
+2. Confirm that the device has received an IP address.
+
+3. Test connectivity to the local network.
+
+4. Test internet connectivity.
+
+5. Check DNS resolution.
+
+6. Restart the network adapter if required.
+
+7. If connectivity remains unavailable after basic troubleshooting, escalate the incident to the Network Support Team.
+
+Escalation Criteria:
+
+Escalate when:
+- The network adapter is active but connectivity remains unavailable.
+- The device has a valid IP address but cannot reach required services.
+- DNS or network infrastructure appears to be unavailable.
+
+Recommended Escalation Team:
+Network Support Team.

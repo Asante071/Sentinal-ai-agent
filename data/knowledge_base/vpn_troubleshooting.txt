@@ -1,0 +1,29 @@
+VPN Troubleshooting Guide
+
+Issue:
+Users are unable to connect to the corporate VPN and receive authentication errors.
+
+Troubleshooting Procedure:
+
+1. Confirm that the user has an active internet connection.
+
+2. Verify that the VPN client is installed and running.
+
+3. Confirm that the user's corporate credentials are valid.
+
+4. Check whether multi-factor authentication (MFA) is functioning correctly.
+
+5. Restart the VPN client and attempt authentication again.
+
+6. If authentication continues to fail while the VPN gateway, authentication service, and MFA service are reachable, the incident should be escalated to the Identity and Access Team.
+
+Escalation Criteria:
+
+Escalate the incident when:
+- User authentication continues to fail.
+- The VPN gateway is reachable.
+- The authentication service is reachable.
+- The MFA service is reachable.
+
+Recommended Escalation Team:
+Identity and Access Team.

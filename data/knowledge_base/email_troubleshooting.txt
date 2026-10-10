@@ -1,0 +1,21 @@
+Email Troubleshooting Guide
+
+Issue:
+Users cannot access email, receive authentication prompts, or cannot send and receive messages.
+
+Troubleshooting Procedure:
+
+1. Confirm that the device has an active network connection.
+2. Check that the mail service is reachable.
+3. Confirm that the mailbox is within its storage limit.
+4. Verify account authentication and any required multi-factor authentication.
+5. Restart the mail client and attempt to reconnect.
+6. Check whether the issue affects one user or multiple users.
+
+Escalation Criteria:
+
+Escalate to the Messaging Team when authentication is valid but the mailbox or
+mail service remains inaccessible, or when multiple users are affected.
+
+Recommended Escalation Team:
+Messaging Team.
