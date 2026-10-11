@@ -1,0 +1,16 @@
+column,type,meaning,observed_values
+ticket_id,integer,Unique ticket number.,1 to 1000
+created_at,datetime,Date and time the ticket was opened.,2024-01-01 to 2024-03-10
+first_response_at,datetime,Date and time of the first reply from a support agent.,2024-01-01 to 2024-03-10
+resolved_at,datetime,Date and time the ticket was resolved. Blank while the ticket is pending or in progress.,2024-01-01 to 2024-03-12; 101 missing
+priority,category,Urgency level. P1 appears most urgent: it has the shortest resolution times.,"P1, P2, P3, P4"
+status,category,Current state of the ticket.,"closed, in_progress, pending, resolved"
+channel,category,How the ticket was raised.,"chat, email, phone, portal"
+category_id,integer code,"Category code 1–8 (1 Access Mgmt, 2 Laptop/Endpoint, 3 Network & VPN, 4 Email & Collab, 5 ERP/WMS, 6 Printers & Devices, 7 Security, 8 Telephony). Unreliable: see Section 4.2.",1 to 8 (8 distinct)
+assigned_agent_id,integer code,ID of the support agent assigned to the ticket.,1 to 10 (10 distinct)
+requester_department,category,Department of the person who raised the ticket.,"Finance, HR, IT, Operations, Sales, Warehouse"
+affected_service,category,Type of service affected.,"business-apps, endpoint, identity, network, peripherals, saas, security, voice"
+summary,text,One-line description of the problem.,56 distinct values
+description,text,Longer description: the summary plus 'Reported by <name> from <department>'.,996 distinct values
+escalated,boolean,Whether the ticket was escalated.,"False, True"
+outage_related,boolean,Whether the ticket relates to a service outage.,False

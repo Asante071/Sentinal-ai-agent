@@ -1,0 +1,134 @@
+{
+  "rows": 1000,
+  "cols": 15,
+  "missing": {
+    "ticket_id": 0,
+    "created_at": 0,
+    "first_response_at": 0,
+    "resolved_at": 101,
+    "priority": 0,
+    "status": 0,
+    "channel": 0,
+    "category_id": 0,
+    "assigned_agent_id": 0,
+    "requester_department": 0,
+    "affected_service": 0,
+    "summary": 0,
+    "description": 0,
+    "escalated": 0,
+    "outage_related": 0
+  },
+  "duplicate_rows": 0,
+  "duplicate_ids": 0,
+  "distinct_summaries": 56,
+  "date_range": [
+    "2024-01-01 00:25:58",
+    "2024-03-10 02:49:24"
+  ],
+  "unresolved_missing_matches_status": true,
+  "anomalies": {
+    "resolved_before_first_response": 21,
+    "first_response_before_created": 0,
+    "resolved_before_created": 0
+  },
+  "anomalous_tickets": 21,
+  "priority_counts": {
+    "P3": 474,
+    "P4": 351,
+    "P2": 143,
+    "P1": 32
+  },
+  "status_counts": {
+    "resolved": 794,
+    "closed": 105,
+    "in_progress": 56,
+    "pending": 45
+  },
+  "channel_counts": {
+    "email": 371,
+    "portal": 293,
+    "chat": 191,
+    "phone": 145
+  },
+  "escalated_pct": 11.6,
+  "outage_related_n": 0,
+  "created_hour_range": [
+    0,
+    23
+  ],
+  "topic_counts": {
+    "Other": 508,
+    "Access/Identity": 162,
+    "Email": 161,
+    "Printer": 85,
+    "VPN": 56,
+    "Account": 28
+  },
+  "topic_pct": {
+    "Other": 50.8,
+    "Access/Identity": 16.2,
+    "Email": 16.1,
+    "Printer": 8.5,
+    "VPN": 5.6,
+    "Account": 2.8
+  },
+  "in_scope_n": 330,
+  "in_scope_pct": 33.0,
+  "resolved_n": 899,
+  "resolved_pct": 89.9,
+  "resolution_duration_excluded_anomalies_n": 21,
+  "resolution_duration_valid_n": 878,
+  "res_hours": {
+    "mean": 23.7,
+    "median": 17.9,
+    "std": 18.6,
+    "min": 0.9,
+    "max": 69.9,
+    "p90": 55.3,
+    "iqr_outliers": 0,
+    "n": 878
+  },
+  "res_median_by_priority": {
+    "P1": 2.1,
+    "P2": 5.0,
+    "P3": 14.8,
+    "P4": 44.2
+  },
+  "frt_hours": {
+    "mean": 6.2,
+    "median": 4.9
+  },
+  "frt_median_by_priority": {
+    "P1": 0.9,
+    "P2": 1.8,
+    "P3": 4.6,
+    "P4": 11.5
+  },
+  "weekly": {
+    "mean": 100.0,
+    "min": 87,
+    "max": 110,
+    "weeks": 10
+  },
+  "p3_p4_n": 825,
+  "escalated_pct_by_topic": {
+    "Access/Identity": 12.3,
+    "Account": 17.9,
+    "Email": 9.9,
+    "Other": 12.2,
+    "Printer": 8.2,
+    "VPN": 10.7
+  },
+  "res_median_in_scope": 17.0,
+  "in_scope_hours_share_pct": 30.9,
+  "label_check_n": 492,
+  "label_agree_n": 84,
+  "label_agree_pct": 17.1,
+  "label_agree_pct_by_topic": {
+    "Access/Identity": 29.6,
+    "Account": 7.1,
+    "Email": 11.8,
+    "Printer": 9.4,
+    "VPN": 12.5
+  }
+}
