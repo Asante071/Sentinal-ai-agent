@@ -1,10 +1,15 @@
+# secrets and local environment
 .env
-.env.*
-!.env.example
 .venv/
-venv/
+
+# python
 __pycache__/
-*.py[cod]
+*.pyc
+
+# generated: search indexes and memory (rebuilt automatically)
 data/vector_db/
 data/vector_db_kb/
 data/agent_memory.db
+
+# tool/editor folders
+.qodo/

@@ -18,7 +18,7 @@ from app.agent.gemini_retry import create_interaction
 from app.agent.tool_gateway import get_tool_definitions
 
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
-model = os.getenv("GEMINI_MODEL", "gemini-3.8-flash")
+model = os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite")
 MESSAGES = [
     "Hi, my username is thabo. My VPN isn't working.",
     "Username sipho here, the VPN is down and I can't reach the file server.",
