@@ -128,6 +128,7 @@ check("outcome: ticket is 'ticket', escalation wins", outcome_of([{"tool": "crea
 code, html = request("/")
 check("page is served and talks to the API", code == 200 and "SENTINEL" in html and "/api/state" in html and "http://" not in PAGE.replace("http://127", ""))
 check("page has the new features", all(word in PAGE for word in ("Technician", "kbcard", "clearMem", "offBtn", "banner")))
+check("page explains live versus offline", "Solid border: a live Gemini run" in PAGE and "Dashed border: the offline workflow" in PAGE)
 check("server listens on this computer only", server.server_address[0] == "127.0.0.1")
 code, cfg = request("/api/config")
 check("config shows model, memory, thoughts and offline mode", cfg == {"model": "stand-in", "memory": True, "thoughts": True, "offline": True}, str(cfg))
@@ -152,6 +153,7 @@ check("observations carry success and seconds from the gateway", all("success" i
 check("knowledge search observation carries the matched articles", [a["id"] for a in observations[0].get("articles", [])] == ["KB-VPN-001", "KB-VPN-002"])
 final = state["events"][-1]
 check("final answer is included", "INC-1001" in final["text"] and "Knowledge base article" in final["text"])
+check("live answers are labelled live, with the model name", final.get("mode") == "live" and final.get("model") == "stand-in", str((final.get("mode"), final.get("model"))))
 check("final answer: outcome judged from the tools, tool list and time", final["outcome"] == "escalated" and final["tools_used"][0] == "knowledge_search"
       and len(final["tools_used"]) == 5 and final["elapsed"] >= 0.4, f"({final['outcome']}, {final['elapsed']} s)")
 check("'since' returns only the new part of the log", len(request(f"/api/state?since={state['total'] - 1}")[1]["events"]) == 1)
@@ -207,6 +209,7 @@ offline = request(f"/api/state?since={before}")[1]["events"]
 check("offline events: user line, then thought, action, observation ..., final, all tagged offline",
       offline[0]["kind"] == "user" and {"thought", "action", "observation", "final"} <= {e["kind"] for e in offline} and all(e.get("source") == "offline" for e in offline),
       str([e["kind"] for e in offline][:6]))
+check("offline answers are labelled offline", offline[-1].get("mode") == "offline")
 check("offline final answer: outcome and tools", offline[-1]["outcome"] == "escalated" and "lookup_incident" in offline[-1]["tools_used"] and "escalate_incident" in offline[-1]["tools_used"])
 resolved = offline_events({**fake_run("INC-1003"), "escalation_required": False, "escalation": None, "remediation_action": "Restart email client and reconnect",
                            "remediation_observation": "Mail client: RESTARTED", "outcome": "Resolved through simulated local remediation."})

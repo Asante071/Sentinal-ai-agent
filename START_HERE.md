@@ -8,6 +8,7 @@ are simulated.
 Gemini key (free, aistudio.google.com). Never send your `.env` file to anyone.
 
 - `SETUP.md`: setup, how to run everything, settings, troubleshooting
+- `SYSTEM_INSTRUCTIONS.md`: the exact instructions the agent sends to Gemini
 - `evidence/`: the measured results (evaluation, retrieval, reasoning probe, memory session)
 - `results/`: the raw result files of every evaluation run
 - `app/`: the agent and the live dashboard; `backend/`, `knowledge_base/`, `evaluation/`: the IT tools, articles and test scenarios

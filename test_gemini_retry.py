@@ -35,7 +35,7 @@ class FakeClient:
 
 
 def err503():
-    return RuntimeError("Error code: 503 - gemini-3.8-flash is currently experiencing high demand")
+    return RuntimeError("Error code: 503 - the model is currently experiencing high demand")
 
 
 os.environ["GEMINI_ATTEMPTS"], os.environ["GEMINI_DEADLINE_S"] = "3", "5"

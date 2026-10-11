@@ -57,7 +57,7 @@ Never share or commit `.env`.
 ```
 python run_all_tests.py
 ```
-Six test suites run with a stand-in playing Gemini. Expected: six `[PASS]` lines (6/6, 27/27, 23/23, 12/12, 41/41 and 22/22 checks).
+Six test suites run with a stand-in playing Gemini. Expected: six `[PASS]` lines (6/6, 28/28, 23/23, 12/12, 44/44 and 22/22 checks).
 It takes one to two minutes.
 
 ## 5. Run the agent
@@ -90,6 +90,8 @@ the final answer. What it adds:
 - **Technician and Employee views.** The button at the top right switches between the full reasoning and only the conversation.
 - **Tickets, tool audit log and memory.** The tickets in the simulated system, every tool call, and what the agent remembers
   about a user.
+- **Live or offline, always labelled.** Every answer says whether it came from a live Gemini run (with the model name) or from
+  the offline workflow, and a line under the activity heading explains the two border styles.
 - **Offline workflow.** Asante's scripted workflow (no AI, three preset incidents) plays in the same timeline, marked as
   offline. It follows fixed rules, so it works without Gemini and gives the same result every time.
   Its knowledge search uses Asante's original index, which is not shipped. Build it once (it takes a few seconds):
@@ -115,7 +117,7 @@ Each article should have a `# Title`, an `**Article ID:**` and a `**Category:**`
 ## 8. Settings (all optional, in `.env`)
 | Setting | Default | Meaning |
 |---|---|---|
-| `GEMINI_MODEL` | gemini-3.8-flash | Which Gemini model to use. Run `python check_models.py` to see which ones answer today |
+| `GEMINI_MODEL` | gemini-3.5-flash-lite | Which Gemini model to use. Run `python check_models.py` to see which ones answer today |
 | `GEMINI_DEADLINE_S` | 40 | Seconds to wait for one Gemini answer |
 | `GEMINI_ATTEMPTS` | 3 | Tries before giving up |
 | `KB_DIR` | knowledge_base | Folder with the articles |

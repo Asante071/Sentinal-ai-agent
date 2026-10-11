@@ -215,5 +215,10 @@ a = fresh_agent(odd)
 reply = a.run("I'm thabo and the printer isn't working.", verbose=False)
 check("reply with no steps but with text is accepted", reply == "Please give me the printer ID." and odd.calls == 1)
 
+# 12. a missing user or printer is reported with the plain words "not found"
+from app.agent.gateway_agent import BASE_INSTRUCTION
+check("instructions: a missing user or printer is reported as 'not found', then the agent stops",
+      "was not found" in BASE_INSTRUCTION and "stop. Change nothing" in BASE_INSTRUCTION)
+
 print(f"\n{sum(results)}/{len(results)} checks passed")
 sys.exit(0 if all(results) else 1)

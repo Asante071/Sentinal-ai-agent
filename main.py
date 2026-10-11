@@ -86,7 +86,7 @@ print("SENTINELAI AGENT")
 print("=" * 60)
 
 interaction = client.interactions.create(
-    model="gemini-3.8-flash",
+    model=os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite"),
     system_instruction=system_instruction,
     input=incident,
     tools=tools
@@ -143,7 +143,7 @@ while True:
         })
 
     interaction = client.interactions.create(
-        model="gemini-3.8-flash",
+        model=os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite"),
         previous_interaction_id=interaction.id,
         input=function_results,
         tools=tools

@@ -16,7 +16,7 @@ from app.agent.gateway_agent import BASE_INSTRUCTION
 from app.agent.tool_gateway import get_tool_definitions
 
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
-model = os.getenv("GEMINI_MODEL", "gemini-3.8-flash")
+model = os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite")
 MESSAGE = "Hi, my username is thabo. My VPN isn't working."
 print("Model:", model)
 
