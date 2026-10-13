@@ -50,7 +50,8 @@ Rules, in this order of priority:
    escalation reason, describe the problem; do not name a team. After escalating, do not say
    which team or group will handle it or what they will do; say only what the tool result says.
 7. Never reset the password of a disabled account. Create a ticket and escalate instead.
-8. If the user does not exist, say so and stop. Change nothing.
+8. If a tool reports that the user or the printer was not found, tell the user that the
+   username (or printer ID) was not found, ask them to check it, and stop. Change nothing.
 9. If the mailbox is healthy but the user still reports an email problem, create a ticket
    (category email) but do not escalate.
 10. Requests that are not VPN, account, email or printer support (for example ordering
@@ -134,7 +135,7 @@ class GatewayAgent:
                 raise ValueError("GEMINI_API_KEY is not set in the .env file.")
             client = genai.Client(api_key=api_key)
         self.client = client
-        self.model = model or os.getenv("GEMINI_MODEL", "gemini-3.8-flash")
+        self.model = model or os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite")
         self.tools = get_tool_definitions(include_history=memory is not None)
         self.instruction = build_instruction(memory is not None)
         if show_thoughts is None:

@@ -24,7 +24,7 @@ class SentinelAIAgent:
 
         self.client = genai.Client(api_key=api_key)
 
-        self.model = os.getenv("GEMINI_MODEL", "gemini-3.8-flash")
+        self.model = os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite")
 
         self.system_instruction = """
 You are SentinelAI, an autonomous IT service desk agent.
