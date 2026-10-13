@@ -91,7 +91,7 @@ def offline_events(r):
     add("action", tool="generate_incident_summary", args={"incident_id": iid})
     add("observation", tool="generate_incident_summary", status="SUMMARY", message=str(r.get("summary") or "").strip(), success=True)
     outcome = "escalated" if r.get("escalation_required") else ("resolved" if r.get("remediation_action") else "answered")
-    add("final", text=r.get("outcome", ""), outcome=outcome, warnings=[],
+    add("final", text=r.get("outcome", ""), outcome=outcome, mode="offline", warnings=[],
         tools_used=[e["tool"] for e in ev if e["kind"] == "observation"])
     return ev
 
@@ -178,6 +178,7 @@ class Console:
                 elif event["kind"] == "final":
                     event["warnings"] = list(self.agent.warnings)
                     event["outcome"] = outcome_of(self._run_obs)
+                    event["mode"], event["model"] = "live", self.agent.model
                     event["tools_used"] = [o["tool"] for o in self._run_obs]
                     event["elapsed"] = round(time.time() - self._t0, 1)
                 self.log.append(event)
@@ -378,6 +379,7 @@ th,td{text-align:left;padding:5px 4px;border-bottom:1px solid var(--line);vertic
 th{color:var(--muted);font-weight:600;font-size:11px;letter-spacing:.08em;text-transform:uppercase}
 .muted{color:var(--muted)}
 footer{padding:4px 22px 22px;color:var(--muted);font-size:12px}
+.legend{font-size:12px;color:var(--muted);margin:-4px 0 10px}
 body.employee .tech{display:none !important}
 </style>
 </head>
@@ -408,6 +410,7 @@ body.employee .tech{display:none !important}
   </section>
   <section class="panel">
     <h2>Agent activity: thought, action, observation</h2>
+    <div class="legend">Solid border: a live Gemini run (the model is shown at the top and on each answer). Dashed border: the offline workflow, scripted, no AI.</div>
     <div id="timeline"></div>
   </section>
   <aside style="display:flex;flex-direction:column;gap:16px">
@@ -452,6 +455,7 @@ function rich(container, text) {          // **bold** without ever inserting HTM
 function tagLine(label, ev) {
   const t = el('div', 'tag', label);
   if (ev.source === 'offline') t.appendChild(el('span', 'src', 'offline workflow, no AI'));
+  else if (ev.mode === 'live') t.appendChild(el('span', 'src', 'live \u00b7 ' + ev.model));
   return t;
 }
 function addEvent(ev) {
@@ -672,7 +676,7 @@ $('viewBtn').onclick = () => {
 $('hBtn').onclick = lookup;
 $('hUser').addEventListener('keydown', e => { if (e.key === 'Enter') lookup(); });
 fetch('/api/config').then(r => r.json()).then(c => {
-  $('chipModel').textContent = c.model;
+  $('chipModel').textContent = 'live \u00b7 ' + c.model;
   $('chipMem').textContent = 'memory ' + (c.memory ? 'on' : 'off'); $('chipMem').className = 'chip' + (c.memory ? ' on' : '');
   $('chipTh').textContent = 'thoughts ' + (c.thoughts ? 'on' : 'off'); $('chipTh').className = 'chip' + (c.thoughts ? ' on' : '');
 });
